@@ -1,0 +1,8 @@
+2013-09-14  sachin  <iclcoolster@gmail.com>
+
+	* network-status.el: 0.9
+	Initial working script.
+
+	TODO:
+	- Should update line periodically. 
+

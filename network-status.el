@@ -53,8 +53,8 @@ When internet in DOWN."
 (defcustom network-status-host-name "google.com"
   "Host name to ping.
 
-It can be any live server on the internet. For example:
-www.google.com, www.gnu.org etc."
+It can be any live server on the internet.
+For example: www.google.com, www.gnu.org etc."
   :type '(string)
   :group 'network-status)
 
@@ -69,22 +69,22 @@ Port number of host."
   "Kill network process if active."
   (interactive)
   (if (process-status network-status-process-name)
-      (progn 
+      (progn
 	(delete-process network-status-process-name))))
 
 (defun network-status-up ()
-  "DOCSTRING"
+  "Update mode line if network in up."
   (interactive)
   (network-status-kill-process)
   (if (member network-status-down-string global-mode-string)
-      (progn 
+      (progn
 	(delq network-status-down-string global-mode-string)
 	(add-to-list 'global-mode-string network-status-up-string 1))
     (add-to-list 'global-mode-string network-status-up-string 1))
   (force-mode-line-update))
 
 (defun network-status-down ()
-  "DOCSTRING"
+  "Update mode line if network in down."
   (interactive)
   (network-status-kill-process)
   (if (member network-status-up-string global-mode-string)
@@ -108,7 +108,6 @@ Port number of host."
     (progn
       (network-status-down))))
 
-;; (setq battery-update-timer (run-at-time nil battery-update-interval
-;; 						'battery-update-handler))
+(provide 'network-status)
+;;; network-status.el ends here
 
-;; (run-at-time nil 2 (chk-internet))

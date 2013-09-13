@@ -1,0 +1,32 @@
+* network-status
+  Display network status in mode line
+
+** Clone
+     - Clone this repository by typing
+       #+BEGIN_SRC bash
+         git clone https://github.com/psachin/network-status.git
+       #+END_SRC
+
+** Install 
+*** Manual
+     - Add the directory containing =network-status.el= file to =load-path= in your
+       =~/.emacs= file. For example:
+       #+BEGIN_SRC emacs-lisp
+         (add-to-list 'load-path "/path/to/network-status/")
+       #+END_SRC
+
+     - To load a package, add:
+       #+BEGIN_SRC emacs-lisp
+         (require 'network-status)
+       #+END_SRC
+       
+     - Optionally, run =make= to byte-compile the file
+       
+** Usage
+   - =M-x network-status=
+   - You will see an ↑ (up-arrow) or ↓ (down-arrow) depending upon
+     network status
+   - Customize using =M-x customize-group RET network-status RET=
+
+** License
+   - See COPYING
