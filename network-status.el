@@ -65,6 +65,16 @@ Port number of host."
   :type '(integer)
   :group 'network-status)
 
+(defcustom network-status-update-interval 1
+  "Set update interval for `network-status'.
+
+In seconds."
+  :type '(integer)
+  :group 'network-status)
+
+(defvar network-status-timer nil
+  "Interval timer object.")
+
 (defun network-status-kill-process ()
   "Kill network process if active."
   (interactive)
@@ -73,7 +83,7 @@ Port number of host."
 	(delete-process network-status-process-name))))
 
 (defun network-status-up ()
-  "Update mode line if network in up."
+  "Update mode line if network is up."
   (interactive)
   (network-status-kill-process)
   (if (member network-status-down-string global-mode-string)
@@ -84,7 +94,7 @@ Port number of host."
   (force-mode-line-update))
 
 (defun network-status-down ()
-  "Update mode line if network in down."
+  "Update mode line if network is down."
   (interactive)
   (network-status-kill-process)
   (if (member network-status-up-string global-mode-string)
@@ -94,9 +104,10 @@ Port number of host."
     (add-to-list 'global-mode-string network-status-down-string t))
   (force-mode-line-update))
 
-;;;###autoload
-(defun network-status ()
-  "Check internet connection by pinging host."
+(defun network-status-updater ()
+  "Check internet connection by pinging host.
+
+And update the status on mode line."
   (interactive)
   (if (ignore-errors (make-network-process
        :name network-status-process-name
@@ -108,6 +119,15 @@ Port number of host."
     (progn
       (network-status-down))))
 
+;;;###autoload
+(defun network-status ()
+  "Call `network-status-updater'.
+
+Every `network-status-update-interval' seconds."
+  (interactive)
+  (setq network-status-timer (run-at-time nil network-status-update-interval
+	       'network-status-updater)))
+  
 (provide 'network-status)
 ;;; network-status.el ends here
 
