@@ -79,8 +79,8 @@ Port number of host."
   (if (member network-status-down-string global-mode-string)
       (progn
 	(delq network-status-down-string global-mode-string)
-	(add-to-list 'global-mode-string network-status-up-string 1))
-    (add-to-list 'global-mode-string network-status-up-string 1))
+	(add-to-list 'global-mode-string network-status-up-string t))
+    (add-to-list 'global-mode-string network-status-up-string t))
   (force-mode-line-update))
 
 (defun network-status-down ()
@@ -90,8 +90,8 @@ Port number of host."
   (if (member network-status-up-string global-mode-string)
     (progn
       (delq network-status-up-string global-mode-string)
-      (add-to-list 'global-mode-string network-status-down-string 1))
-    (add-to-list 'global-mode-string network-status-down-string 1))
+      (add-to-list 'global-mode-string network-status-down-string t))
+    (add-to-list 'global-mode-string network-status-down-string t))
   (force-mode-line-update))
 
 ;;;###autoload
