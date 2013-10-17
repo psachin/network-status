@@ -24,7 +24,7 @@
        
 ** Usage
    - =M-x network-status-mode=
-   - Or simple add this line to your =.emacs= file
+   - Or simply add this line to your =.emacs= file
      #+BEGIN_SRC emacs-lisp
        (network-status-mode t)
      #+END_SRC emacs-lisp
