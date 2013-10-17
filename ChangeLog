@@ -1,3 +1,10 @@
+2013-10-17  sachin  <iclcoolster@gmail.com>
+
+	* network-status.el: 
+
+	- Update insterval in `network-status-update-interval' seconds
+	- Minor mode
+
 2013-09-14  sachin  <iclcoolster@gmail.com>
 
 	* network-status.el: 0.9

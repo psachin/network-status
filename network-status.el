@@ -1,6 +1,6 @@
 ;;; network-status.el -- Display network status in mode line.
 
-;; Copyright (C) 2013  Sachin Patil
+;; Copyright (C) 2013 by Sachin Patil
 
 ;; Author: Sachin Patil <isachin@iitb.ac.in>
 ;; URL: http://github.com/psachin/network-status
@@ -27,6 +27,8 @@
 ;; M-x customize-group RET network-status RET
 
 ;;; Code:
+
+(require 'timer)
 
 (defgroup network-status nil
   "Display network status in mode line."
@@ -62,18 +64,21 @@ For example: www.google.com, www.gnu.org etc."
   "Host port number.
 
 Port number of host."
-  :type '(integer)
+  :type 'integer
   :group 'network-status)
 
 (defcustom network-status-update-interval 1
   "Set update interval for `network-status'.
 
 In seconds."
-  :type '(integer)
+  :type 'integer
   :group 'network-status)
 
 (defvar network-status-timer nil
-  "Interval timer object.")
+  "Network status interval timer object.")
+
+(defvar network-status-mode-line-string ""
+  "Default network status mode line string.")
 
 (defun network-status-kill-process ()
   "Kill network process if active."
@@ -84,31 +89,26 @@ In seconds."
 
 (defun network-status-up ()
   "Update mode line if network is up."
-  (interactive)
   (network-status-kill-process)
-  (if (member network-status-down-string global-mode-string)
-      (progn
-	(delq network-status-down-string global-mode-string)
-	(add-to-list 'global-mode-string network-status-up-string t))
-    (add-to-list 'global-mode-string network-status-up-string t))
+  (if (member network-status-mode-line-string global-mode-string)
+	(delq network-status-mode-line-string global-mode-string))
+  (add-to-list 'global-mode-string (setq network-status-mode-line-string
+					 network-status-up-string) t)
   (force-mode-line-update))
 
 (defun network-status-down ()
   "Update mode line if network is down."
-  (interactive)
   (network-status-kill-process)
-  (if (member network-status-up-string global-mode-string)
-    (progn
-      (delq network-status-up-string global-mode-string)
-      (add-to-list 'global-mode-string network-status-down-string t))
-    (add-to-list 'global-mode-string network-status-down-string t))
+  (if (member network-status-mode-line-string global-mode-string)
+      (delq network-status-mode-line-string global-mode-string))
+  (add-to-list 'global-mode-string (setq network-status-mode-line-string
+					     network-status-down-string) t)
   (force-mode-line-update))
 
 (defun network-status-updater ()
   "Check internet connection by pinging host.
 
 And update the status on mode line."
-  (interactive)
   (if (ignore-errors (make-network-process
        :name network-status-process-name
        :host network-status-host-name
@@ -127,7 +127,25 @@ Every `network-status-update-interval' seconds."
   (interactive)
   (setq network-status-timer (run-at-time nil network-status-update-interval
 	       'network-status-updater)))
-  
+
+;;;###autoload
+(define-minor-mode network-status-mode
+  "Display network status in mode line."
+  :lighter " nS"
+  :global t
+  (setq network-status-mode-line-string "")
+  (or global-mode-string (setq global-mode-string '("")))
+  (and network-status-timer (cancel-timer network-status-timer))
+  (if (not network-status-mode)
+      (progn
+  	(network-status-kill-process)
+	(cancel-timer network-status-timer)
+	(if (member network-status-up-string global-mode-string)
+	    (delq network-status-up-string global-mode-string)
+	  (delq network-status-down-string global-mode-string))
+	(delq network-status-mode-line-string global-mode-string))
+    (network-status)))
+
 (provide 'network-status)
 ;;; network-status.el ends here
 
