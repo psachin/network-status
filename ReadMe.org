@@ -23,9 +23,15 @@
      - Optionally, run =make= to byte-compile the file
        
 ** Usage
-   - =M-x network-status=
+   - =M-x network-status-mode=
+   - Or simple add this line to your =.emacs= file
+     #+BEGIN_SRC emacs-lisp
+       (network-status-mode t)
+     #+END_SRC emacs-lisp
    - You will see an ↑ (up-arrow) or ↓ (down-arrow) depending upon
      network status
+
+** Customize
    - Customize using =M-x customize-group RET network-status RET=
 
 ** License
